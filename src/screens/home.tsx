@@ -6,7 +6,7 @@ import VideoList from "../components/videoList";
 
 const HomeScreen = () => {
   const [videos, setVideos] = React.useState([]);
-  const ytKey = "AIzaSyBPudxjI2PCl-_MDnWp3M4gnxS5hGjfct0";
+  const ytKey = "AIzaSyBxQDTl1aZzcJyyrdg-gTwfCSyRvEYIQvE";
 
   const fetchVideos = async () => {
     const response = await fetch(

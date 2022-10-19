@@ -10,7 +10,7 @@ export default function VideoCard({ video }: Props) {
   const navigation = useNavigation();
   const channelId = video.item.snippet.channelId;
   const [channel, setChannel] = React.useState();
-  const ytKey = "AIzaSyBPudxjI2PCl-_MDnWp3M4gnxS5hGjfct0";
+  const ytKey = "AIzaSyBxQDTl1aZzcJyyrdg-gTwfCSyRvEYIQvE";
 
   const fetchChannel = async () => {
     const response = await fetch(
@@ -27,7 +27,7 @@ export default function VideoCard({ video }: Props) {
     fetchChannel();
   }, []);
 
-  console.log(video);
+  // console.log(video);
   return (
     <View className="w-full mb-4">
       <Pressable

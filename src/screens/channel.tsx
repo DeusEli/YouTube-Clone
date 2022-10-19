@@ -18,7 +18,7 @@ interface Props {
 const Channel = ({ route }: Props) => {
   const selectedChannelData = route.params.selectedChannel;
   const [videos, setVideos] = React.useState([]);
-  const ytKey = "AIzaSyBPudxjI2PCl-_MDnWp3M4gnxS5hGjfct0";
+  const ytKey = "AIzaSyBxQDTl1aZzcJyyrdg-gTwfCSyRvEYIQvE";
   const channelId = selectedChannelData.id;
 
   const fetchVideos = async () => {
@@ -27,14 +27,16 @@ const Channel = ({ route }: Props) => {
         ytKey +
         "&channelId=" +
         channelId +
-        "&part=snippet,id&order=date&maxResults=2"
+        "&part=snippet&order=date&maxResults=2"
     );
     const data = await response.json();
     setVideos(data.items);
-    console.log(response);
+    console.log(videos);
   };
 
-  useEffect(() => {
+  //www.googleapis.com/youtube/v3/search?key=AIzaSyBxQDTl1aZzcJyyrdg-gTwfCSyRvEYIQvE
+
+  https: useEffect(() => {
     fetchVideos();
   }, []);
 
