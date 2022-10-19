@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Header() {
   return (
-    <View className="flex flex-row justify-between pt-12">
+    <View className="flex flex-row justify-between pt-12 bg-black h-24 pb-4">
       <View className="flex flex-row items-center">
         <Image
           className="w-12 h-12"
