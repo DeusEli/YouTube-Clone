@@ -1,16 +1,27 @@
 import React, { useEffect } from "react";
 import { View, Text, Image, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import variables from "../../global";
 
 interface Props {
   video: any;
+  idProp: string;
 }
 
-export default function VideoCard({ video }: Props) {
+export default function VideoCard({ video, idProp }: Props) {
   const navigation = useNavigation();
   const channelId = video.item.snippet.channelId;
   const [channel, setChannel] = React.useState();
-  const ytKey = "AIzaSyBxQDTl1aZzcJyyrdg-gTwfCSyRvEYIQvE";
+  const ytKey = variables.getApiKey();
+
+  console.log;
+  var videoId: String = "";
+
+  if (idProp == "") {
+    videoId = video.item.id;
+  } else if (idProp == "fromChannel") {
+    videoId = video.item.id.videoId;
+  }
 
   const fetchChannel = async () => {
     const response = await fetch(
@@ -27,23 +38,27 @@ export default function VideoCard({ video }: Props) {
     fetchChannel();
   }, []);
 
-  // console.log(video);
-  return (
+  console.log(videoId);
+
+  //youtube.googleapis.com/youtube/v3/channels?part=snippet&part=brandingSettings%2CcontentDetails%2Cstatistics&id=UCq-Fj5jknLsUf-MWSy4_brA&key=AIzaSyCCWG3OzEB8q6D2OgFg-ywK-3o5TQtzz54
+
+  // console.log(video.item.snippet.channelId);
+  // console.log(channel?.snippet?.thumbnails?.default?.url);
+  https: return (
     <View className="w-full mb-4">
       <Pressable
         className=""
         onPress={() => {
           navigation.navigate("VideoPlayer", {
             selectedVideo: video,
+            idVideo: videoId,
           });
         }}
       >
         <Image
-          className="w-full h-52"
-          //source={{ uri: "https://i.ytimg.com/vi/G_tn9h8InGM/default_live.jpg" }}
+          className="w-full h-60"
           source={{
-            // uri: "https://i.ytimg.com/vi/G_tn9h8InGM/hqdefault_live.jpg",
-            uri: video.item.snippet.thumbnails.high.url,
+            uri: video?.item.snippet.thumbnails.high.url,
           }}
         />
       </Pressable>
@@ -57,24 +72,21 @@ export default function VideoCard({ video }: Props) {
           <Image
             className="w-12 h-12 rounded-full mt-2 "
             source={{
-              //   uri: "https://yt3.ggpht.com/ipwuju0y7t8vzr1FY99Q1XSeuf1fcf9fvP2GcAGFvj9VtIlbLY9FcuFglxADwsxzUi-rhxIVR1Y=s800-c-k-c0xffffffff-no-rj-mo",
-              uri: channel?.snippet.thumbnails.default.url,
+              uri: channel?.snippet?.thumbnails?.default?.url,
             }}
           />
         </Pressable>
         <View className="flex flex-col ml-4 w-full pr-24">
           <Text className="text-sm font-semibold text-white w-72 flex-wrap">
-            {video.item.snippet.title}
+            {video?.item.snippet.title}
           </Text>
           <View className="flex flex-row w-40 items-center">
             <Text className="text-sm text-gray-400">
-              {video.item.snippet.channelTitle}
+              {video?.item.snippet.channelTitle}
             </Text>
-            {/* <Text className="text-sm text-gray-400"> ● </Text>
-            <Text className="text-sm text-gray-400">7M de visitas</Text> */}
             <Text className="text-xs text-gray-400"> ● </Text>
             <Text className="text-sm text-gray-400">
-              {video.item.snippet.publishTime.substring(0, 10)}
+              {video?.item.snippet.publishedAt.substring(0, 10)}
             </Text>
           </View>
         </View>

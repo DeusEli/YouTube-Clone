@@ -7,9 +7,9 @@ import {
   ImageBackground,
   ScrollView,
 } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import Header from "../components/header";
 import VideoList from "../components/videoList";
+import variables from "../../global";
 
 interface Props {
   route: any;
@@ -18,8 +18,10 @@ interface Props {
 const Channel = ({ route }: Props) => {
   const selectedChannelData = route.params.selectedChannel;
   const [videos, setVideos] = React.useState([]);
-  const ytKey = "AIzaSyBxQDTl1aZzcJyyrdg-gTwfCSyRvEYIQvE";
+  const ytKey = variables.getApiKey();
   const channelId = selectedChannelData.id;
+
+  console.log(channelId);
 
   const fetchVideos = async () => {
     const response = await fetch(
@@ -27,7 +29,7 @@ const Channel = ({ route }: Props) => {
         ytKey +
         "&channelId=" +
         channelId +
-        "&part=snippet&order=date&maxResults=2"
+        "&part=snippet&order=date&maxResults=8"
     );
     const data = await response.json();
     setVideos(data.items);
@@ -84,7 +86,7 @@ const Channel = ({ route }: Props) => {
               {selectedChannelData.snippet.description.substring(0, 125)}...
             </Text>
           </View>
-          <VideoList video={videos} />
+          <VideoList video={videos} id={"fromChannel"} />
         </View>
       </ScrollView>
     </SafeAreaView>

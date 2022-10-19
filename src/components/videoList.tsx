@@ -4,14 +4,17 @@ import VideoCard from "./videoCard";
 
 interface Props {
   video: any;
+  id: string;
 }
 
-export default function VideoList({ video }: Props) {
+export default function VideoList({ video, id }: Props) {
+  //   console.log(video);
+
   return (
     <FlatList
       horizontal={false}
       data={video}
-      renderItem={({ item }) => <VideoCard video={{ item }} />}
+      renderItem={({ item }) => <VideoCard video={{ item }} idProp={id} />}
     />
   );
 }

@@ -6,7 +6,7 @@ interface Props {
   comment: any;
 }
 export default function CommentCard({ comment }: Props) {
-  console.log(comment);
+  //   console.log(comment);
   return (
     <View className="flex flex-row p-2 w-full bg-stone-900">
       <View className="flex flex-col">

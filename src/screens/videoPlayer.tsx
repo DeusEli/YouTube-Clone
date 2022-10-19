@@ -12,6 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import CommentCard from "../components/commentCard";
 import { SafeAreaView } from "react-native-safe-area-context";
+import VideoList from "../components/videoList";
+import variables from "../../global";
 
 interface Props {
   route: any;
@@ -20,23 +22,38 @@ interface Props {
 const VideoPlayer = ({ route }: Props) => {
   const navigation = useNavigation();
   const selectedVideoData = route.params.selectedVideo;
+  const videoId = route.params.idVideo;
   const [playing, setPlaying] = useState(true);
   const channelId = selectedVideoData.item.snippet.channelId;
   const [channel, setChannel] = useState();
   const [relatedVideos, setRelatedVideos] = useState();
   const [comments, setComments] = useState();
   const [showComments, setShowComments] = useState<boolean>(true);
-  const ytKey = "AIzaSyBxQDTl1aZzcJyyrdg-gTwfCSyRvEYIQvE";
+  const ytKey = variables.getApiKey();
 
   const fetchVideoComments = async () => {
     const response = await fetch(
-      "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=8&order=relevance&videoId=" +
-        selectedVideoData.item.id.videoId +
+      "https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=15&order=relevance&videoId=" +
+        videoId +
         "&key=" +
         ytKey
     );
     const data = await response.json();
     setComments(data.items);
+    // console.log(comments);
+  };
+
+  const fetchRelatedVideos = async () => {
+    const response = await fetch(
+      "https://www.googleapis.com/youtube/v3/search?key=" +
+        ytKey +
+        "&channelId=" +
+        channelId +
+        "&part=snippet&maxResults=4"
+    );
+    const data = await response.json();
+    setRelatedVideos(data.items);
+    // console.log(relatedVideos);
   };
 
   const fetchChannel = async () => {
@@ -55,16 +72,20 @@ const VideoPlayer = ({ route }: Props) => {
   useEffect(() => {
     fetchChannel();
     fetchVideoComments();
+    fetchRelatedVideos();
   }, []);
+
+  {
+    /* <Ionicons name="md-eye" size={18} color="gray" />
+        <Ionicons name="md-eye-off" size={18} color="gray" /> */
+  }
+
+  // console.log("Ola", relatedVideos);
 
   // console.log(comments[0]?.snippet);
   return (
-    <SafeAreaView className="h-full pt-12 bg-stone-900">
-      <YoutubePlayer
-        height={225}
-        play={playing}
-        videoId={selectedVideoData.item.id.videoId}
-      />
+    <SafeAreaView className="h-full bg-stone-900">
+      <YoutubePlayer height={225} play={playing} videoId={videoId} />
       <ScrollView className="flex flex-col w-full">
         <View className="flex flex-col p-4 w-full pr-18">
           <Text className="text-xl font-semibold text-white w-72 flex-wrap">
@@ -118,18 +139,15 @@ const VideoPlayer = ({ route }: Props) => {
             </View>
             <Text className="text-red-600 text-sm mr-2">SUBSCRIBE</Text>
           </View>
-          {/* <Ionicons name="md-eye" size={18} color="gray" />
-        <Ionicons name="md-eye-off" size={18} color="gray" /> */}
-
           {showComments ? (
             <View className="flex flex-col w-full">
               <Text
-                className="text-red-300 text-sm mt-2 self-end"
+                className="text-red-600 text-sm mt-2 self-end"
                 onPress={() => {
                   setShowComments(false);
                 }}
               >
-                Hide comments
+                Show related videos
               </Text>
               <FlatList
                 data={comments}
@@ -139,18 +157,14 @@ const VideoPlayer = ({ route }: Props) => {
           ) : (
             <View className="flex flex-col">
               <Text
-                className="text-red-600 text-sm mt-2 self-end"
+                className="text-red-600 text-sm mt-2 self-end mb-2"
                 onPress={() => {
                   setShowComments(true);
                 }}
               >
-                Recomendations
+                Show comments
               </Text>
-              <Text className="text-white text-sm mt-2">No comments</Text>
-              {/* <FlatList
-                data={comments}
-                renderItem={({ item }) => <CommentCard comment={item} />}
-              /> */}
+              <VideoList video={relatedVideos} id={"fromChannel"} />
             </View>
           )}
         </View>
